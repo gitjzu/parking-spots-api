@@ -1,0 +1,16 @@
+{
+  "name": "parking-spots-api",
+  "version": "0.0.1",
+  "description": "GraphQL API for parking spots mobile app",
+  "main": "index.js",
+  "author": "Yacine Ouarab",
+  "license": "MIT",
+  "dependencies": {
+    "aws-sdk": "^2.97.0",
+    "aws-serverless-express": "^3.0.2",
+    "body-parser": "^1.17.2",
+    "express": "^4.15.4",
+    "express-graphql": "^0.6.7",
+    "graphql": "^0.10.5"
+  }
+}
