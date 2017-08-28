@@ -13,10 +13,11 @@ var schema = buildSchema(`
     lon: Float!
     type: String!
     coordinates: [Coordinates]!
+    distance: Float
   }
 
   type Query {
-    allSpots: [Spot]
+    Spots(userLat: Float, userLon: Float, spotName: String): [Spot]
   }
 `);
 
