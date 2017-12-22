@@ -28,7 +28,7 @@ function createSpot(spot) {
   })
 }
 
-function getSpots(userLat, userLon) {
+function getSpots(userLat, userLon, offset = 0, limit) {
   return new Promise(function(resolve, reject) {
     var params = {
       TableName: table,
@@ -56,10 +56,14 @@ function getSpots(userLat, userLon) {
         //round to 1 decimal and add to spot properties
         spot.distance = distanceInKm.toFixed(1)
       })
-      //return array sorted by distance
-      return util.sortByKey(data, 'distance')
+      //sort array by distance with offset and limit applied
+      data = util.sortByKey(data, 'distance')
     }
-    //No user location, so just pass the data like we got it from DB
+
+    if (limit) {
+      data = data.splice(offset, limit)
+    }
+
     return data
   })
   .catch(err => {
@@ -68,6 +72,6 @@ function getSpots(userLat, userLon) {
 }
 
 module.exports = {
-  getSpots: (userLat, userLon) => getSpots(userLat, userLon),
+  getSpots: (userLat, userLon, offset, limit) => getSpots(userLat, userLon, offset, limit),
   createSpot: () => createSpot()
 }

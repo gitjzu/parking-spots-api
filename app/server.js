@@ -5,8 +5,8 @@ var dynamoConnection = require ('./dynamo.js')
 var schema = require('./schema.js')
 
 var root = {
-  Spots: ({userLat, userLon}) => {
-    return dynamoConnection.getSpots(userLat, userLon)
+  Spots: ({userLat, userLon, offset, limit}) => {
+    return dynamoConnection.getSpots(userLat, userLon, offset, limit)
   },
 }
 
