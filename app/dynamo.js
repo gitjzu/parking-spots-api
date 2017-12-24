@@ -13,33 +13,37 @@ const dynamoClient = new AWS.DynamoDB.DocumentClient()
 
 const table = 'Parking_Spot'
 
-function createSpot(spot) {
+function getSpots(userLat, userLon, offset = 0, limit, type) {
   return new Promise(function(resolve, reject) {
-    var params = {
+
+    /**
+     * 'type' is a reserved word in DynamoDB, 
+     *  so we have to use an Expression Attribute '#spot_type'
+     *  instead and map it to the db field 'type'
+     */
+    let params = {
       TableName: table,
-      Item: spot
-    }
-
-    dynamoClient.put(params, function(err, data) {
-      if (err) return reject(err)
-      return resolve(post)
-    })
-
-  })
-}
-
-function getSpots(userLat, userLon, offset = 0, limit) {
-  return new Promise(function(resolve, reject) {
-    var params = {
-      TableName: table,
-      AttributesToGet: [
+      ProjectionExpression: [
         'id',
         'spot_name',
         'lat',
         'lon',
         'coordinates',
-        'type',
-      ]
+        '#spot_type',
+      ],
+      ExpressionAttributeNames: {
+        '#spot_type': 'type'
+      },
+    }
+
+    // Filter with type if type is provided
+    if (type) {
+      params = Object.assign({}, params, {
+        FilterExpression: '#spot_type = :spot_type',
+        ExpressionAttributeValues: {
+          ':spot_type': type,
+        },
+      })
     }
 
     dynamoClient.scan(params, function(err, data) {
@@ -72,6 +76,5 @@ function getSpots(userLat, userLon, offset = 0, limit) {
 }
 
 module.exports = {
-  getSpots: (userLat, userLon, offset, limit) => getSpots(userLat, userLon, offset, limit),
-  createSpot: () => createSpot()
+  getSpots: (userLat, userLon, offset, limit, type) => getSpots(userLat, userLon, offset, limit, type)
 }
