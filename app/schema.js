@@ -17,7 +17,7 @@ var schema = buildSchema(`
   }
 
   type Query {
-    Spots(userLat: Float, userLon: Float, offset: Int, limit: Int, type: String): [Spot]
+    Spots(userLat: Float, userLon: Float, offset: Int, limit: Int, type: String, name: String): [Spot]
   }
 `);
 

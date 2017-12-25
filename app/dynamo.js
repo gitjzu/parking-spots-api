@@ -13,7 +13,7 @@ const dynamoClient = new AWS.DynamoDB.DocumentClient()
 
 const table = 'Parking_Spot'
 
-function getSpots(userLat, userLon, offset = 0, limit, type) {
+function getSpots(userLat, userLon, offset = 0, limit, type, name) {
   return new Promise(function(resolve, reject) {
 
     /**
@@ -42,6 +42,15 @@ function getSpots(userLat, userLon, offset = 0, limit, type) {
         FilterExpression: '#spot_type = :spot_type',
         ExpressionAttributeValues: {
           ':spot_type': type,
+        },
+      })
+    }
+
+    if (name) {
+      params = Object.assign({}, params, {
+        FilterExpression: 'contains (search_name, :name)',
+        ExpressionAttributeValues: {
+          ':name': name.toLowerCase(),
         },
       })
     }
@@ -76,5 +85,5 @@ function getSpots(userLat, userLon, offset = 0, limit, type) {
 }
 
 module.exports = {
-  getSpots: (userLat, userLon, offset, limit, type) => getSpots(userLat, userLon, offset, limit, type)
+  getSpots: (userLat, userLon, offset, limit, type, name) => getSpots(userLat, userLon, offset, limit, type, name)
 }
